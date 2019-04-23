@@ -10,45 +10,32 @@ except ImportError:
 # content of the special variable __version__ will be shown in the Agent status page
 __version__ = "1.0.0"
 
+import os
+import subprocess
+import argparse
+
 class HelloCheck(AgentCheck):
 	def check(self, instance):
 		self.gauge('hello.world', 1, tags=['owner:et'])
 
-"""
-import argparse
-import os
-import subprocess
-
-from maas_common import metric_bool
-from maas_common import print_output
-
-
-def bonding_ifaces_check(_):
-    bonding_ifaces = os.listdir("/proc/net/bonding")
-    for bonding_iface in bonding_ifaces:
-        bonding_iface_check_cmd = ['cat', '/proc/net/bonding/%s'
-                                   % bonding_iface]
-        bonding_iface_check_cmd_output = subprocess.check_output(
-            bonding_iface_check_cmd
-        )
-
-        bonding_iface_check_cmd_output_lines = (
-            bonding_iface_check_cmd_output.split('\n')
-        )
-
-        has_slave_down = False
-        slave_count = 0
-        for idx, line in enumerate(bonding_iface_check_cmd_output_lines):
-            if line.startswith("Slave Interface"):
-                slave_count = slave_count + 1
-                slave_inface_mii_status_line = (
-                    bonding_iface_check_cmd_output_lines[idx + 1]
-                )
-                slave_inface_mii_status = (
-                    slave_inface_mii_status_line.split(":")[1]
-                )
-                if 'up' not in slave_inface_mii_status or slave_count < 2:
-                    has_slave_down = True
+def bonding_check():
+	dir = "/home/ec2-user/bonding"
+	bonds = os.listdir(dir)
+	for bond in bonds:
+		cmd = ['cat', dir+'/%s' % bond]
+		output = subprocess.check_output(cmd)
+		output_lines = output.split('\n')
+		slave_down = False
+		slave_count = 0
+		for idx, line in enumerate(output_lines):
+			if line.startswith("Slave Interface"):
+				slave_count += 1
+				slave_miistatus_line = output_lines[idx + 1]
+				slave_miistatus = output_lines.split(":")[1]
+				if 'up' not in slave_miistatus or slave_count < 2:
+					slave_down = True
+				if slave_down:
+						
 
         if has_slave_down:
             metric_bool('host_bonding_iface_%s_slave_down' %
@@ -58,20 +45,3 @@ def bonding_ifaces_check(_):
             metric_bool('host_bonding_iface_%s_slave_down' %
                         bonding_iface,
                         False)
-
-
-def main(args):
-    bonding_ifaces_check(args)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='Check statuses of local bonding interfaces')
-    parser.add_argument('--telegraf-output',
-                        action='store_true',
-                        default=False,
-                        help='Set the output format to telegraf')
-    args = parser.parse_args()
-    with print_output(print_telegraf=args.telegraf_output):
-        main(args)
-"""
