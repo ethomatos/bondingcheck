@@ -14,34 +14,28 @@ import os
 import subprocess
 import argparse
 
-class HelloCheck(AgentCheck):
+class BondingCheck(AgentCheck):
 	def check(self, instance):
-		self.gauge('hello.world', 1, tags=['owner:et'])
-
-def bonding_check():
-	dir = "/home/ec2-user/bonding"
-	bonds = os.listdir(dir)
-	for bond in bonds:
-		cmd = ['cat', dir+'/%s' % bond]
-		output = subprocess.check_output(cmd)
-		output_lines = output.split('\n')
-		slave_down = False
-		slave_count = 0
-		for idx, line in enumerate(output_lines):
-			if line.startswith("Slave Interface"):
-				slave_count += 1
-				slave_miistatus_line = output_lines[idx + 1]
-				slave_miistatus = output_lines.split(":")[1]
-				if 'up' not in slave_miistatus or slave_count < 2:
-					slave_down = True
-				if slave_down:
-						
-
-        if has_slave_down:
-            metric_bool('host_bonding_iface_%s_slave_down' %
-                        bonding_iface,
-                        True)
-        else:
-            metric_bool('host_bonding_iface_%s_slave_down' %
-                        bonding_iface,
-                        False)
+		dir = "/home/ec2-user/bonding"
+		bonds = os.listdir(dir)
+		for bond in bonds:
+			cmd = ['cat', dir+'/%s' % bond]
+			output = subprocess.check_output(cmd)
+			output_lines = output.split('\n')
+			slave_down = False
+			slave_count = 0
+			for idx, line in enumerate(output_lines):
+				if line.startswith("Slave Interface"):
+					slave_count += 1
+					slave_miistatus_line = output_lines[idx + 1]
+					slave_miistatus = slave_miistatus_line.split(":")[1]
+					if 'up' not in slave_miistatus or slave_count < 2:
+						slave_down = True
+					metric = bond + '_slave_down'
+					tag = 'hostbond:' + bond
+					if slave_down:
+						self.gauge(metric, True, tags=['owner:et',tag])
+						self.service_check('BondingCheckStatus', self.WARNING, tags=None, message="")
+	        else:
+						self.gauge(metric, False, tags=['owner:et',tag])
+						self.service_check('BondingCheckStatus', self.OK, tags=None, message="")
