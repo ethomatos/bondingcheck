@@ -8,7 +8,7 @@ except ImportError:
 	from datadog_checks.checks import AgentCheck
 
 # content of the special variable __version__ will be shown in the Agent status page
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 import os
 import subprocess
@@ -70,11 +70,11 @@ class BondingCheck(AgentCheck):
 
 					# If the slave is down, generate a metric, add tags and make it a value of 1
 					if slave_down:
-						self.gauge(metric, '1', tags=["owner:et", tag])
+						self.gauge(metric, '1', tags=["owner:et", "customer:comcast", tag])
 						self.service_check('BondingCheck', self.WARNING, tags=None, message="")
 					# If the slave is up, generate a metric, add tags and make it a value of 0
 					else:
-						self.gauge(metric, '0', tags=['owner:et',tag])
+						self.gauge(metric, '0', tags=['owner:et',"customer:comcast", tag])
 						self.service_check('BondingCheck', self.OK, tags=None, message="")
 
 					# The only time the bonded interface is down is if all slaves are down
