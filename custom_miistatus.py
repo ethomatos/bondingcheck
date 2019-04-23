@@ -8,7 +8,7 @@ except ImportError:
 	from datadog_checks.checks import AgentCheck
 
 # content of the special variable __version__ will be shown in the Agent status page
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 import os
 import subprocess
