@@ -36,6 +36,6 @@ class BondingCheck(AgentCheck):
 					if slave_down:
 						self.gauge(metric, True, tags=['owner:et',tag])
 						self.service_check('BondingCheckStatus', self.WARNING, tags=None, message="")
-	        else:
+					else:
 						self.gauge(metric, False, tags=['owner:et',tag])
 						self.service_check('BondingCheckStatus', self.OK, tags=None, message="")
