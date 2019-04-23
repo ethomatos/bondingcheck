@@ -29,7 +29,7 @@ class BondingCheck(AgentCheck):
 					slave_count += 1
 					slave_miistatus_line = output_lines[idx + 1]
 					slave_miistatus = slave_miistatus_line.split(":")[1]
-					if 'up' not in slave_miistatus or slave_count < 2:
+					if 'up' not in slave_miistatus.rstrip().lstrip() or slave_count < 2:
 						slave_down = True
 					metric = bond + '_slave_down'
 					tag = "hostbond:" + bond
