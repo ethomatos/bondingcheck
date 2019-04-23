@@ -52,7 +52,13 @@ class BondingCheck(AgentCheck):
 					# If the status is not up, the slave is down, also assume the bond is down
 					if 'up' not in slave_miistatus:
 						slave_down = True
-						bond_down = True
+						# Check if this is the first slave otherwise if the first was up
+						# but the second is down, this will incorrectly assume the entire bond
+						# is down when checking the second slave. If this is the first slave 
+						# then it is okay because if the second slave is up, the else: statement
+						# resets this variable to false, meaning the entire bond is still up.
+						if slave_count == 1:
+							bond_down = True
 					# If the status is up, ensure the bond is not considered down
 					else:
 						bond_down = False
