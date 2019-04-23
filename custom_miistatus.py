@@ -32,10 +32,10 @@ class BondingCheck(AgentCheck):
 					if 'up' not in slave_miistatus or slave_count < 2:
 						slave_down = True
 					metric = bond + '_slave_down'
-					tag = 'hostbond:' + bond
+					tag = "hostbond:" + bond
 					if slave_down:
-						self.gauge(metric, True, tags=['owner:et',tag])
+						self.gauge(metric, 1, tags=["owner:et", tag])
 						self.service_check('BondingCheckStatus', self.WARNING, tags=None, message="")
 					else:
-						self.gauge(metric, False, tags=['owner:et',tag])
+						self.gauge(metric, 0, tags=['owner:et',tag])
 						self.service_check('BondingCheckStatus', self.OK, tags=None, message="")
