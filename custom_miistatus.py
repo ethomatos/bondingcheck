@@ -19,7 +19,10 @@ class BondingCheck(AgentCheck):
 
 		# Specify the platform's bonding directory, get a list of all the bonded interfaces
 		# Loop through each bonded interface file to extract mii-status
-		dir = "/home/ec2-user/bonding"
+                ############
+                # REMEMBER # to modify the directory below to match your platform's /proc/net/bonding
+                ############
+		dir = "/home/ubuntu/bonding"
 		bonds = os.listdir(dir)
 
 		for bond in bonds:
@@ -70,11 +73,19 @@ class BondingCheck(AgentCheck):
 
 					# If the slave is down, generate a metric, add tags and make it a value of 1
 					if slave_down:
-						self.gauge(metric, '1', tags=["owner:et", "customer:comcast", tag])
+                                                ###
+                                                ### REMEMBER to modify the tag owner:et below to anything desired
+                                                ### Use the syntax key:value
+                                                ###
+						self.gauge(metric, '1', tags=["owner:et", tag])
 						self.service_check('BondingCheck', self.WARNING, tags=None, message="")
 					# If the slave is up, generate a metric, add tags and make it a value of 0
 					else:
-						self.gauge(metric, '0', tags=['owner:et',"customer:comcast", tag])
+                                                ###
+                                                ### REMEMBER to modify the tag below owner:et to anything desired
+                                                ### Use the syntax key:value
+                                                ###
+						self.gauge(metric, '0', tags=['owner:et', tag])
 						self.service_check('BondingCheck', self.OK, tags=None, message="")
 
 					# The only time the bonded interface is down is if all slaves are down
@@ -83,7 +94,15 @@ class BondingCheck(AgentCheck):
 					# apply tags and make the value a 1 for down or 0 for up
 					if bond_down:
 						metric = bond + '_down'
+                                                ###
+                                                ### REMEMBER to modify the tag below owner:et to anything desired
+                                                ### Use the syntax key:value
+                                                ###
 						self.gauge(metric, '1', tags=["owner:et", tag])
 					else:
 						metric = bond + '_down'
+                                                ###
+                                                ### REMEMBER to modify the tag below owner:et to anything desired
+                                                ### Use the syntax key:value
+                                                ###
 						self.gauge(metric, '0', tags=["owner:et", tag])
