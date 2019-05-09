@@ -5,7 +5,7 @@ Use [this](https://docs.datadoghq.com/developers/write_agent_check/?tab=agentv6#
 #### This section will set up the agent so that it can use the custom check.
 1. On the system running the Datadog agent go to the /etc/datadog-agent/conf.d directory.
 2. Create a file called `custom_miistatus.yaml` inside the directory and add the following content inside the file.
--- **Note:** The `min_collection_interval` attribute controls how often the agent check will run in units of seconds.
+- **Note:** The `min_collection_interval` attribute controls how often the agent check will run in units of seconds.
 ~~~~
 init_config:
 
