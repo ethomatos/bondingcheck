@@ -1,3 +1,5 @@
+# __Please__ discontinue using this repository, instead use [this](https://github.com/DataDog/bondingcheck) one
+
 ## How to use this Python script which functions as a Datadog custom Agent check
 
 Use [this](https://docs.datadoghq.com/developers/write_agent_check/?tab=agentv6#overview) reference URL for detailed documentation.
